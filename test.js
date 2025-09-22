@@ -25,28 +25,22 @@ async function simple_example() {
         console.log('IMU initialized, waiting for startup...');
         await new Promise(resolve => setTimeout(resolve, 2000));
         
+        let last = Date.now();
+
+        imu.on("game_quaternion", (data) => {
+            let cur = Date.now();
+            console.log(`Game Quaternion (${(cur - last)} ms since last):`);
+            last = cur;
+            // console.log(data);
+        });
+
         // Enable accelerometer
-        console.log('Enabling accelerometer...');
-        await imu.enable_feature(REPORTS.GRAVITY);
-        
-        // Read accelerometer data for 5 seconds
-        console.log('Reading accelerometer data...\n');
-        
-        for (let i = 0; i < 50; i++) {
-            try {
-                let [x, y, z] = imu.gravity;
-                let pitch = Math.atan2(x, Math.sqrt(y * y + z * z)) / (Math.PI / 180)
-                let roll = Math.atan2(-y, z) / (Math.PI / 180)
-                
-                console.log(`Pitch: ${pitch.toFixed(2)}°, Roll: ${roll.toFixed(2)}°`);
-            } catch (error) {
-                console.log(`Reading error: ${error.message}`);
-            }
-            
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        
-        console.log('\nExample completed!');
+        console.log('Enabling game rotation...');
+        await imu.enable_feature(REPORTS.GAME_ROTATION_VECTOR, 8333);
+
+        imu.start_auto_reporting(1000);
+        await new Promise(resolve => setTimeout(resolve, 6000));
+ 
         
     } catch (error) {
         console.error(`Error: ${error.message}`);
