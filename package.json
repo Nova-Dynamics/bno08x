@@ -1,6 +1,6 @@
 {
   "name": "@novadynamics/bno08x",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js port of the Adafruit BNO08x CircuitPython library for interfacing with the BNO08x IMU",
   "main": "index.js",
   "scripts": {
