@@ -1,19 +1,21 @@
 /**
  * BNO08x Node.js Library
- * 
- * Port of the adafruit_bno08x Python library for interfacing with the BNO08x IMU
- * 
+ *
+ * Port of the adafruit_bno08x Python library for the Hillcrest Laboratories
+ * BNO08x family of IMUs.
+ *
  * @author Sean Sullivan
- * @description Helper library for the Hillcrest Laboratories BNO08x IMUs
  */
 
 const { BNO08X_I2C, _BNO08X_DEFAULT_ADDRESS } = require('./lib/i2c');
-const { 
+const { BNO08X_IIO } = require('./lib/iio');
+const {
     BNO08X,
     Packet,
     PacketError,
     PacketHeader,
-    // Report constants
+
+    // Report id constants
     BNO_REPORT_ACCELEROMETER,
     BNO_REPORT_GYROSCOPE,
     BNO_REPORT_MAGNETOMETER,
@@ -29,8 +31,11 @@ const {
     BNO_REPORT_RAW_MAGNETOMETER,
     BNO_REPORT_SHAKE_DETECTOR,
     BNO_REPORT_ACTIVITY_CLASSIFIER,
+    BNO_REPORT_GYRO_INTEGRATED_ROTATION_VECTOR,
+
     REPORT_ACCURACY_STATUS,
-    // Helper functions
+    REPORT_META,
+
     parse_sensor_id,
     _parse_sensor_report_data,
     _parse_step_counter_report,
@@ -43,16 +48,17 @@ module.exports = {
     // Main classes
     BNO08X,
     BNO08X_I2C,
-    
+    BNO08X_IIO,
+
     // Supporting classes
     Packet,
     PacketError,
     PacketHeader,
-    
+
     // Constants
     BNO08X_DEFAULT_ADDRESS: _BNO08X_DEFAULT_ADDRESS,
-    
-    // Report IDs
+
+    // Report ids (use these for both transports' enable_feature)
     REPORTS: {
         ACCELEROMETER: BNO_REPORT_ACCELEROMETER,
         GYROSCOPE: BNO_REPORT_GYROSCOPE,
@@ -69,11 +75,15 @@ module.exports = {
         RAW_MAGNETOMETER: BNO_REPORT_RAW_MAGNETOMETER,
         SHAKE_DETECTOR: BNO_REPORT_SHAKE_DETECTOR,
         ACTIVITY_CLASSIFIER: BNO_REPORT_ACTIVITY_CLASSIFIER,
+        GYRO_INTEGRATED_ROTATION_VECTOR: BNO_REPORT_GYRO_INTEGRATED_ROTATION_VECTOR,
     },
-    
-    // Accuracy status
+
+    // Accuracy status string table
     ACCURACY_STATUS: REPORT_ACCURACY_STATUS,
-    
+
+    // Canonical report metadata table (single source of truth)
+    REPORT_META,
+
     // Helper functions
     parse_sensor_id,
     parse_sensor_report_data: _parse_sensor_report_data,
